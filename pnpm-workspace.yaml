@@ -1,4 +1,6 @@
+# Build scripts allowed at install: esbuild (Astro/Vite and wrangler bundling), workerd (wrangler runtime).
+# sharp is not used (no image optimisation), so its script stays off.
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  workerd: set this to true or false
+  esbuild: true
+  workerd: true
+  sharp: false
