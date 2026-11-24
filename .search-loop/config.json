@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "productionOrigin": "https://geteventfacefinder.com",
+  "format": "markdown",
+  "publicationMode": "fast_forward",
+  "contentPathTemplate": "src/content/blog/{topic}/{locale}.md",
+  "templateFile": "src/content/blog/event-day-checklist/en.md",
+  "schemaFiles": [
+    "src/content.config.ts",
+    "scripts/check-seo.mjs"
+  ],
+  "requiredChecks": [
+    "build",
+    "content-scope",
+    "seo",
+    "render"
+  ],
+  "previewUrlTemplate": "https://p{sha8}-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev{path}",
+  "sampleUrl": "https://REPLACE-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev/en/blog/event-day-checklist",
+  "rollbackVerified": false,
+  "verifiedCommitSha": "0000000000000000000000000000000000000000",
+  "allowedLocales": [
+    "en",
+    "fr"
+  ],
+  "localeUrlTemplates": {
+    "en": "/en/blog/{topic}",
+    "fr": "/fr/blog/{topic}"
+  },
+  "pageMappings": {
+    "https://geteventfacefinder.com/en/blog/event-day-checklist": "src/content/blog/event-day-checklist/en.md",
+    "https://geteventfacefinder.com/fr/blog/event-day-checklist": "src/content/blog/event-day-checklist/fr.md",
+    "https://geteventfacefinder.com/en/blog/event-photographer-brief": "src/content/blog/event-photographer-brief/en.md",
+    "https://geteventfacefinder.com/fr/blog/event-photographer-brief": "src/content/blog/event-photographer-brief/fr.md",
+    "https://geteventfacefinder.com/en/blog/guest-welcome-desk": "src/content/blog/guest-welcome-desk/en.md",
+    "https://geteventfacefinder.com/fr/blog/guest-welcome-desk": "src/content/blog/guest-welcome-desk/fr.md",
+    "https://geteventfacefinder.com/en/blog/photo-consent-at-events": "src/content/blog/photo-consent-at-events/en.md",
+    "https://geteventfacefinder.com/fr/blog/photo-consent-at-events": "src/content/blog/photo-consent-at-events/fr.md"
+  }
+}

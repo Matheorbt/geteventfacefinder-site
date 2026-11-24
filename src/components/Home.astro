@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+import { absolute, articlePath, articles, blogPath, homePath, t, type Locale } from "../lib/site";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const strings = t[locale];
+const list = (await articles(locale)).slice(0, 5);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: strings.siteName,
+  url: absolute(homePath(locale)),
+  inLanguage: locale,
+  description: strings.homeDescription,
+};
+---
+<Base locale={locale} title={strings.homeTitle} description={strings.homeDescription} path={homePath(locale)} alternates={{ en: homePath("en"), fr: homePath("fr") }} jsonLd={jsonLd}>
+  <h1>{strings.siteName}</h1>
+  <p class="lede">{strings.tagline}</p>
+  <ul class="cards">
+    {list.map((entry) => (
+      <li>
+        <h2><a href={articlePath(locale, entry.topic)}>{entry.data.title}</a></h2>
+        <p>{entry.data.description}</p>
+      </li>
+    ))}
+  </ul>
+  <p><a href={blogPath(locale)}>{strings.allGuides} →</a></p>
+</Base>

@@ -1,0 +1,23 @@
+{
+  "name": "geteventfacefinder-site",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:scope": "node scripts/check-scope.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
+    "check:render": "node scripts/check-render.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.6",
+    "astro": "5.18.2"
+  },
+  "devDependencies": {
+    "wrangler": "4.160.1"
+  }
+}

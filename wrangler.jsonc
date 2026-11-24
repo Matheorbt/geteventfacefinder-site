@@ -1,0 +1,16 @@
+{
+  // Static site only: no Worker code, no bindings. Production on geteventfacefinder.com; every pull request
+  // commit is uploaded as a version with the preview alias p<sha8>, served at
+  // https://p<sha8>-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "geteventfacefinder-site",
+  "account_id": "a1a1298b2a15f2552c47b4369aed1a51",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

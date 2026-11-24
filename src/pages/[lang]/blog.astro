@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import { absolute, articlePath, articles, blogPath, formatDate, isoDate, LOCALES, t, type Locale } from "../../lib/site";
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+const locale = Astro.params.lang as Locale;
+const strings = t[locale];
+const list = await articles(locale);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: strings.blogTitle,
+  url: absolute(blogPath(locale)),
+  inLanguage: locale,
+  hasPart: list.map((entry) => ({ "@type": "Article", headline: entry.data.title, url: absolute(articlePath(locale, entry.topic)) })),
+};
+---
+<Base locale={locale} title={strings.blogTitle} description={strings.blogDescription} path={blogPath(locale)} alternates={{ en: blogPath("en"), fr: blogPath("fr") }} jsonLd={jsonLd}>
+  <h1>{strings.blogTitle}</h1>
+  <p class="lede">{strings.blogDescription}</p>
+  <ul class="cards">
+    {list.map((entry) => (
+      <li>
+        <h2><a href={articlePath(locale, entry.topic)}>{entry.data.title}</a></h2>
+        <p>{entry.data.description}</p>
+        <p class="meta"><time datetime={isoDate(entry.data.updatedAt ?? entry.data.publishedAt)}>{formatDate(entry.data.updatedAt ?? entry.data.publishedAt, locale)}</time></p>
+      </li>
+    ))}
+  </ul>
+</Base>
