@@ -16,9 +16,9 @@
     "render"
   ],
   "previewUrlTemplate": "https://p{sha8}-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev{path}",
-  "sampleUrl": "https://REPLACE-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev/en/blog/event-day-checklist",
-  "rollbackVerified": false,
-  "verifiedCommitSha": "0000000000000000000000000000000000000000",
+  "sampleUrl": "https://p5c9262fa-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev/en/blog/event-day-checklist",
+  "rollbackVerified": true,
+  "verifiedCommitSha": "5c9262facbd75a6d1c6dfe571ef01eb972f79a50",
   "allowedLocales": [
     "en",
     "fr"

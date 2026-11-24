@@ -8,6 +8,8 @@
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
   "preview_urls": true,
+  // Web only: one Workers Custom Domain on the apex. Mail records (bounce MX/SPF, _dmarc, SES DKIM) are untouched.
+  "routes": [{ "pattern": "geteventfacefinder.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "html_handling": "drop-trailing-slash",
