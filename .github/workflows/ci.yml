@@ -89,7 +89,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: printf '/*\n  X-Robots-Tag: noindex\n' > dist/_headers
+      - name: Mark the preview noindex
+        run: |
+          printf '/*\n  X-Robots-Tag: noindex\n' > dist/_headers
       - name: Upload preview version
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
