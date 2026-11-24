@@ -78,6 +78,9 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     needs: [build, content-scope, seo, render]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -100,6 +103,15 @@ jobs:
           ALIAS="p${HEAD_SHA:0:8}"
           pnpm exec wrangler versions upload --preview-alias "$ALIAS" --message "PR #${{ github.event.pull_request.number }} ${HEAD_SHA}"
           echo "Preview: https://${ALIAS}-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev" >> "$GITHUB_STEP_SUMMARY"
+      # Reports the preview as a GitHub deployment of the tested commit, which Grow Mentions' "Lire le dépôt" reads.
+      - name: Record GitHub deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          URL="https://p${HEAD_SHA:0:8}-geteventfacefinder-site.matheo-rbt-pro-cloudfaire.workers.dev"
+          ID=$(printf '{"ref":"%s","environment":"preview","auto_merge":false,"required_contexts":[],"transient_environment":true,"production_environment":false}' "$HEAD_SHA" \
+            | gh api "repos/${GITHUB_REPOSITORY}/deployments" --input - -q .id)
+          gh api "repos/${GITHUB_REPOSITORY}/deployments/${ID}/statuses" -f state=success -f environment_url="$URL" -f log_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >/dev/null
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
