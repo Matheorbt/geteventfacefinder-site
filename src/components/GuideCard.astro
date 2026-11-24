@@ -1,0 +1,14 @@
+---
+import TopicIcon from "./TopicIcon.astro";
+import { articlePath, readingMinutes, typo, ui, type Article } from "../lib/site";
+interface Props { entry: Article }
+const { entry } = Astro.props;
+---
+<li class="guide-card">
+  <TopicIcon topic={entry.topic} />
+  <div>
+    <h3><a href={articlePath(entry.locale, entry.topic)}>{typo(entry.data.title, entry.locale)}</a></h3>
+    <p>{typo(entry.data.description, entry.locale)}</p>
+    <span class="card-meta">{ui[entry.locale].minutes(readingMinutes(entry.body))}</span>
+  </div>
+</li>

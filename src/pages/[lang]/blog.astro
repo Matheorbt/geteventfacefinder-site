@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { absolute, articlePath, articles, blogPath, formatDate, isoDate, LOCALES, t, type Locale } from "../../lib/site";
+import GuideCard from "../../components/GuideCard.astro";
+import { absolute, articlePath, articles, blogPath, homePath, LOCALES, t, ui, type Locale } from "../../lib/site";
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -18,15 +19,18 @@ const jsonLd = {
 };
 ---
 <Base locale={locale} title={strings.blogTitle} description={strings.blogDescription} path={blogPath(locale)} alternates={{ en: blogPath("en"), fr: blogPath("fr") }} jsonLd={jsonLd}>
-  <h1>{strings.blogTitle}</h1>
-  <p class="lede">{strings.blogDescription}</p>
-  <ul class="cards">
-    {list.map((entry) => (
-      <li>
-        <h2><a href={articlePath(locale, entry.topic)}>{entry.data.title}</a></h2>
-        <p>{entry.data.description}</p>
-        <p class="meta"><time datetime={isoDate(entry.data.updatedAt ?? entry.data.publishedAt)}>{formatDate(entry.data.updatedAt ?? entry.data.publishedAt, locale)}</time></p>
-      </li>
-    ))}
-  </ul>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={locale === "fr" ? "Fil d’Ariane" : "Breadcrumb"}><a href={homePath(locale)}>{ui[locale].home}</a><span aria-hidden="true">/</span><span>{strings.blog}</span></nav>
+      <h1>{strings.blogTitle}</h1>
+      <p class="lede">{strings.blogDescription}</p>
+    </div>
+  </header>
+  <section class="guides">
+    <div class="wrap">
+      <ul class="guide-grid">
+        {list.map((entry) => <GuideCard entry={entry} />)}
+      </ul>
+    </div>
+  </section>
 </Base>

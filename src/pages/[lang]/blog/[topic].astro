@@ -1,7 +1,9 @@
 ---
 import { render } from "astro:content";
 import Base from "../../../layouts/Base.astro";
-import { absolute, articlePath, articles, blogPath, formatDate, homePath, isoDate, t, type Article, type Locale } from "../../../lib/site";
+import GuideCard from "../../../components/GuideCard.astro";
+import TopicIcon from "../../../components/TopicIcon.astro";
+import { absolute, articlePath, articles, blogPath, formatDate, homePath, isoDate, readingMinutes, t, typo, ui, type Article, type Locale } from "../../../lib/site";
 
 export async function getStaticPaths() {
   const all = await articles();
@@ -12,14 +14,16 @@ export async function getStaticPaths() {
       alternates: Object.fromEntries(
         all.filter((other) => other.topic === entry.topic).map((other) => [other.locale, articlePath(other.locale, other.topic)]),
       ),
+      related: all.filter((other) => other.locale === entry.locale && other.topic !== entry.topic).slice(0, 2),
     },
   }));
 }
 
-interface Props { entry: Article; alternates: Partial<Record<Locale, string>> }
-const { entry, alternates } = Astro.props;
+interface Props { entry: Article; alternates: Partial<Record<Locale, string>>; related: Article[] }
+const { entry, alternates, related } = Astro.props;
 const locale = entry.locale;
 const strings = t[locale];
+const copy = ui[locale];
 const { Content } = await render(entry);
 const path = articlePath(locale, entry.topic);
 const published = isoDate(entry.data.publishedAt);
@@ -51,13 +55,33 @@ const jsonLd = {
 ---
 <Base locale={locale} title={entry.data.title} description={entry.data.description} path={path} alternates={alternates} jsonLd={jsonLd} type="article" modifiedAt={modified}>
   <article>
-    <h1>{entry.data.title}</h1>
-    <p class="meta">
-      {strings.published} <time datetime={published}>{formatDate(entry.data.publishedAt, locale)}</time>
-      {entry.data.updatedAt && <> · {strings.updated} <time datetime={modified}>{formatDate(entry.data.updatedAt, locale)}</time></>}
-    </p>
-    <p class="lede">{entry.data.description}</p>
-    <Content />
+    <header class="page-head article-head">
+      <div class="narrow">
+        <nav class="crumbs" aria-label={locale === "fr" ? "Fil d’Ariane" : "Breadcrumb"}>
+          <a href={homePath(locale)}>{copy.home}</a><span aria-hidden="true">/</span><a href={blogPath(locale)}>{strings.blog}</a>
+        </nav>
+        <TopicIcon topic={entry.topic} size="lg" />
+        <h1>{typo(entry.data.title, locale)}</h1>
+        <p class="lede">{typo(entry.data.description, locale)}</p>
+        <div class="byline">
+          <span>{strings.published} <time datetime={published}>{formatDate(entry.data.publishedAt, locale)}</time></span>
+          {entry.data.updatedAt && <span>{strings.updated} <time datetime={modified}>{formatDate(entry.data.updatedAt, locale)}</time></span>}
+          <span>{copy.minutes(readingMinutes(entry.body))}</span>
+        </div>
+      </div>
+    </header>
+    <div class="narrow prose">
+      <Content />
+    </div>
   </article>
-  <p><a href={blogPath(locale)}>← {strings.allGuides}</a></p>
+  {related.length > 0 && (
+    <section class="related">
+      <div class="narrow">
+        <h2 class="section-title">{copy.related}</h2>
+        <ul class="guide-grid">
+          {related.map((other) => <GuideCard entry={other} />)}
+        </ul>
+      </div>
+    </section>
+  )}
 </Base>

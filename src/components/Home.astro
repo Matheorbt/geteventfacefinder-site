@@ -1,11 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
-import { absolute, articlePath, articles, blogPath, homePath, t, type Locale } from "../lib/site";
+import GuideCard from "./GuideCard.astro";
+import { absolute, articles, blogPath, homePath, t, typo, ui, type Locale } from "../lib/site";
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const strings = t[locale];
-const list = (await articles(locale)).slice(0, 5);
+const copy = ui[locale];
+const list = (await articles(locale)).slice(0, 6);
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -16,15 +18,48 @@ const jsonLd = {
 };
 ---
 <Base locale={locale} title={strings.homeTitle} description={strings.homeDescription} path={homePath(locale)} alternates={{ en: homePath("en"), fr: homePath("fr") }} jsonLd={jsonLd}>
-  <h1>{strings.siteName}</h1>
-  <p class="lede">{strings.tagline}</p>
-  <ul class="cards">
-    {list.map((entry) => (
-      <li>
-        <h2><a href={articlePath(locale, entry.topic)}>{entry.data.title}</a></h2>
-        <p>{entry.data.description}</p>
-      </li>
-    ))}
-  </ul>
-  <p><a href={blogPath(locale)}>{strings.allGuides} →</a></p>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="test-pill"><b>{locale === "fr" ? "Site de test" : "Test site"}</b>{locale === "fr" ? "Voir « À propos » plus bas" : "See “About” below"}</span>
+        <p class="kicker">{copy.heroKicker}</p>
+        <h1>{typo(copy.heroTitle, locale)}</h1>
+        <p class="lede">{typo(copy.heroText, locale)}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href={blogPath(locale)}>{copy.heroCta} <span aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#about">{copy.aboutTitle}</a>
+        </div>
+      </div>
+      <div class="clipboard" aria-hidden="true">
+        <h2>{copy.checklistTitle}</h2>
+        <ul>
+          {copy.checklistDemo.map((item, index) => (
+            <li class={index === 3 ? "todo" : ""}>
+              <span class={index === 3 ? "tick open" : "tick"}>
+                {index !== 3 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10" /></svg>}
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <span class="stamp">3/4</span>
+      </div>
+    </div>
+  </section>
+  <section class="guides">
+    <div class="wrap">
+      <h2 class="section-title">{copy.latest}</h2>
+      <ul class="guide-grid">
+        {list.map((entry) => <GuideCard entry={entry} />)}
+      </ul>
+    </div>
+  </section>
+  <section class="about" id="about">
+    <div class="wrap">
+      <div class="about-box">
+        <h2>{copy.aboutTitle}</h2>
+        <p>{copy.aboutText}</p>
+      </div>
+    </div>
+  </section>
 </Base>
